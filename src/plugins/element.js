@@ -12,12 +12,21 @@ import {
     Submenu,
     MenuItemGroup,
     MenuItem,
-    Scrollbar
+    Image,
+    Scrollbar,
+    Pagination,
+    Breadcrumb,
+    BreadcrumbItem
+
 
 } from 'element-ui'
 
 Vue.use(Button)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
+Vue.use(Pagination)
 Vue.use(Scrollbar)
+Vue.use(Image)
 Vue.use(Menu)
 Vue.use(MenuItem)
 Vue.use(MenuItemGroup)

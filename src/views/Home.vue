@@ -1,8 +1,9 @@
 <template>
   <div id="home-container">
     <el-container class="home-container">
-    <el-aside width="200px" >
-       <el-menu
+    <el-aside style="width:15%" >
+      <el-scrollbar style="width:100% height:100%" >
+         <el-menu
       background-color="#F56C6C"
       text-color="white"
       active-text-color="red"
@@ -15,15 +16,13 @@
           <div>歌单</div>
         </template>
       <!-- 二级菜单 -->
-      <el-menu-item v-for="(item,index) in classifyMusic" :key="index">{{item.name}}</el-menu-item>
+      <el-menu-item v-for="(item,index) in classifyMusic" :key="index" @click="openSongList(item.name)">{{item.name}}</el-menu-item>
       </el-submenu>
       <el-submenu index="2">
         <template slot="title">
           <div>歌手</div>
         </template>
       </el-submenu>
-  
-     
        <el-submenu index="3">
         <template slot="title">
           <div>我的音乐</div>
@@ -40,13 +39,15 @@
         </template>
       </el-submenu>
     </el-menu>
+      </el-scrollbar>
+      
     </el-aside>
     <el-container>
     <el-header> 
     <div class="imgLogo"><img src='../assets/logo.png' alt=""></div>
     <div class="exitLogin"><el-button type="danger" round @click="exitLogin">退出登录</el-button></div>
     </el-header>
-    <el-main><router-view></router-view></el-main>
+    <el-main><router-view :key="$route.fullPath"></router-view></el-main>
     <el-footer>Footer</el-footer>
   </el-container>
 </el-container>
@@ -65,10 +66,13 @@ export default {
     data(){
       return{
         //存储歌单分类数据
-        classifyMusic:[]
+        classifyMusic:[],
+        
       }
     },
+    
     methods:{
+     
       //获取歌单分类的方法
      async getClassifyMusic(){
       const {data:res} =await this.$http.get('/playlist/hot')
@@ -77,7 +81,7 @@ export default {
         this.$message.error('获取歌单分类错误')
       }else{
         this.classifyMusic=res.tags
-        console.log(this.classifyMusic);
+        // console.log(this.classifyMusic);
       }
       },
       //退出登录
@@ -90,8 +94,12 @@ export default {
         this.$message.success('退出成功')
         this.$router.push('/login').catch(err => err)
         }
-        
-
+      },
+      openSongList(name){
+          if(name=="另类/独立"){
+            name="另类"
+          }
+          this.$router.push(`/song_list/${name}`).catch(err => err)
       }
     }
 }
