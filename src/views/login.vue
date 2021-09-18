@@ -12,7 +12,7 @@
           <span>使用手机号码进行注册</span>
           <input type="text" placeholder="昵称"   v-model="registerInfo.nickname"/>
           <input type="mobile" placeholder="手机号码" @blur="testThePhone" v-model="registerInfo.phone"/>
-           <input type="text" placeholder="验证码" @blur="blurCaptcha" v-model="registerInfo.captcha"/> <el-button type="info" @click="sendCapycha">点击获取验证码</el-button>
+           <input type="text" placeholder="验证码" @blur="blurCaptcha" v-model="registerInfo.captcha"/> <el-button type="info" size="mini" @click="sendCapycha(registerInfo.phone)" class="sendRegisterCapycha">点击获取验证码</el-button>
           <input type="password" placeholder="密码"  v-model="registerInfo.password" /> 
           <button @click="register">Sign Up</button>
         </form>
@@ -31,7 +31,7 @@
           <input type="test" placeholder="验证码" @blur="testIsCaptcha" v-show="isShow" v-model="loginInfo.captcha"/>
            <el-button size="mini" round @click="chooseWay" v-show="isShow" >使用密码登录</el-button>
             <el-button size="mini" round @click="chooseWay" v-show="!isShow">使用验证码登录</el-button>
-            
+          <el-button type="info" @click="sendCapycha(loginInfo.phone)" v-show="isShow" class="sendLoginCapycha" size="mini">点击获取验证码</el-button>
           <a href="#">忘记密码?</a>
           <button @click="login">登 录</button>
         </form>
@@ -75,7 +75,9 @@ export default {
       },
       isShow:false,
       //存储获取到的用户信息
-      loginUser:[]
+      loginUser:{},
+      //存储登录token
+      token:''
     }
   }
   ,
@@ -88,9 +90,9 @@ export default {
       this.$refs.containerRef.classList.remove('right-panel-active');
     },
     //发送验证码
-   async sendCapycha(){
+   async sendCapycha(phone){
     //  console.log(this.registerInfo.phone);
-     const {data:res} =await this.$http.get(`/captcha/sent?phone=${this.registerInfo.phone}`)
+     const {data:res} =await this.$http.get(`/captcha/sent?phone=${phone}`)
      console.log(res.code);
      if(res.code==200) {
        this.$message.success('发送验证码成功')
@@ -113,10 +115,10 @@ export default {
     },
     //失去焦点的时候验证验证码
      async blurCaptcha(){
-       console.log(this.registerInfo.captcha);
-       console.log(this.registerInfo.phone);
+      
+     
        const {data:res}=await this.$http.get(`/captcha/verify?phone=${this.registerInfo.phone}&captcha=${this.registerInfo.captcha}`)
-       console.log(res);
+     
        if(res.data.status==='503'){
          this.$message.error('验证码输入错误')
        }else{
@@ -158,14 +160,23 @@ export default {
       if(this.loginInfo.captcha===''){
         //密码登录方式
       const {data:res}= await this.$http.get(`/login/cellphone?phone=${this.loginInfo.phone}&password=${this.loginInfo.password}`)
+     
       if(res.loginType!==1){
         this.$message.error('账号或者密码输入错误')
       }else{
-        //获取登录状态
+        //  账号密码输入成功,获取登录状态
+        console.log(res.token);
       const {data:login}= await this.$http.get(`/login/status`)
       if(login.data.code==200){
+       
+        this.token=res.token
+          //将登录成功的token保存到客户端的sessionStorage中
+       window.sessionStorage.setItem("token",this.token);
+         this.loginUser=login.data.profile
+         //将获取到的信息传入vuex中
+        //  console.log(this.loginUser);
+        this.$store.commit('INIT_userInfo',this.loginUser)
         this.$message.success('登录成功,欢迎享受音乐')
-        this.loginUser=login.data.profile
          //通过编程式导航到首页
          this.$router.push('/home').catch(err => err)
       }
@@ -177,6 +188,15 @@ export default {
           this.$message.error('账号或者验证码输入错误')
         }else{
           //获取登录状态
+           const {data:login}= await this.$http.get(`/login/status`)
+         if(login.data.code==200){
+            //将登录成功的token保存到客户端的sessionStorage中
+       window.sessionStorage.setItem("token",this.token);
+        this.$message.success('登录成功,欢迎享受音乐')
+        this.loginUser=login.data.profile
+         //通过编程式导航到首页
+         this.$router.push('/home').catch(err => err)
+      }
         }
       }
      }
@@ -189,5 +209,12 @@ export default {
 #login-container{
   margin-top: 100px;
   margin-left: 330px;
+}
+.sendLoginCapycha{
+  margin-top: 10px;
+  border-radius: 20px;
+}
+.sendRegisterCapycha{
+  border-radius: 20px;
 }
 </style>

@@ -16,13 +16,19 @@ import {
     Scrollbar,
     Pagination,
     Breadcrumb,
-    BreadcrumbItem
+    BreadcrumbItem,
+    Table,
+    TableColumn,
+    Avatar
 
 
 } from 'element-ui'
 
 Vue.use(Button)
+Vue.use(Avatar)
 Vue.use(Breadcrumb)
+Vue.use(Table)
+Vue.use(TableColumn)
 Vue.use(BreadcrumbItem)
 Vue.use(Pagination)
 Vue.use(Scrollbar)

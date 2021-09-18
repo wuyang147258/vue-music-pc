@@ -10,3 +10,11 @@ body,
 .el-breadcrumb__inner {
     font-size: 14px!important;
 }
+
+.el-table {
+    width: 1200px!important;
+}
+
+.el-footer {
+    height: 80px!important;
+}

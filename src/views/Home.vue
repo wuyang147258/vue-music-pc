@@ -13,7 +13,7 @@
      
       <el-submenu index="1">
         <template slot="title">
-          <div>歌单</div>
+          <div>热门歌单</div>
         </template>
       <!-- 二级菜单 -->
       <el-menu-item v-for="(item,index) in classifyMusic" :key="index" @click="openSongList(item.name)">{{item.name}}</el-menu-item>
@@ -43,12 +43,17 @@
       
     </el-aside>
     <el-container>
-    <el-header> 
-    <div class="imgLogo"><img src='../assets/logo.png' alt=""></div>
+    <el-header class="header"> 
+     
+      <!-- 头像区域 -->
+      <div class="userImg" @click="showUserInfo">
+         <el-avatar :src="this.$store.state.userInfo.avatarUrl"  ></el-avatar>
+      </div>
+    <div class="imgLogo"><img src='../assets/logo.png'></div>
     <div class="exitLogin"><el-button type="danger" round @click="exitLogin">退出登录</el-button></div>
     </el-header>
     <el-main><router-view :key="$route.fullPath"></router-view></el-main>
-    <el-footer>Footer</el-footer>
+    <el-footer><audio @ended="nextMusic" :src="this.$store.state.musicUrl" autoplay volume controls class="audioMusic" ref="audioMusicRef"></audio></el-footer>
   </el-container>
 </el-container>
 
@@ -58,21 +63,24 @@
 <script>
 
 export default {
-  
+   
     created(){
       //在创建的时候获取歌单分类
       this.getClassifyMusic()
+
+      
     },
     data(){
       return{
         //存储歌单分类数据
         classifyMusic:[],
-        
+        //下一首播放音乐的url
+        nextUrl:''
+      
       }
     },
     
     methods:{
-     
       //获取歌单分类的方法
      async getClassifyMusic(){
       const {data:res} =await this.$http.get('/playlist/hot')
@@ -92,6 +100,7 @@ export default {
         }else{
           //刷新登录状态
         this.$message.success('退出成功')
+         window.sessionStorage.clear()
         this.$router.push('/login').catch(err => err)
         }
       },
@@ -100,6 +109,18 @@ export default {
             name="另类"
           }
           this.$router.push(`/song_list/${name}`).catch(err => err)
+      },
+      //监听音乐播放结束
+    async nextMusic(){
+      console.log(this.$store.state.nextId);
+         this.$store.commit('NEXT_ID',this.$store.state.nextId)
+       const {data:res}=await this.$http.get(`/song/url?id=${this.$store.state.nextId}`)
+        this.nextUrl=res.data[0].url
+        this.$refs.audioMusicRef.src=this.nextUrl
+      },
+      showUserInfo(){
+        //编程式导航
+         this.$router.push(`/userInfo/`).catch(err => err)
       }
     }
 }
@@ -120,7 +141,11 @@ export default {
   background-color: #F56C6C;
 }
 .el-main{
-  background-color: rgb(236, 172, 172);
+  width: 100%;
+   height: 20px;
+  line-height: 50px;
+   overflow-y: scroll;
+  background-color: rgb(240, 233, 233);
 }
 .el-menu{height: 100%; color: white;}
 .el-submenu{
@@ -149,8 +174,25 @@ export default {
   height: 100%;
   border-radius: 50%;
 }
+.header{
+  position: relative;
+}
 .exitLogin{
-  float:right;
+  position: absolute;
+  right: 30px;
   line-height: 60px;
 }
+.audioMusic{
+  margin-top: 20px;
+  width: 1500px;
+  
+}
+.userImg{
+ position: absolute;
+ top: 10px;
+  right: 60px;
+  margin-right: 100px;
+ line-height: 60px;
+}
+
 </style>

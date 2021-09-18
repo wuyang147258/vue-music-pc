@@ -75,15 +75,9 @@ export default {
        
       },
       //获取每个歌单中的歌曲
-     async getSongListDetail(id){
-         const {data:res}=await this.$http.get(`/playlist/detail?id=${id}`)
-         if(res.code!==200){
-           this.$message.error('获取歌曲错误')
-         }else{
-           this.$message.success('成功获取歌曲')
-         }
-      
-          console.log(res.playlist.tracks);
+     getSongListDetail(id){
+        this.$router.push(`/song_list_detail/${id}`).catch(err => err)
+       
       },
      
       handleCurrentChange(newPage){
@@ -118,7 +112,7 @@ export default {
 .songListName{
  
   position: absolute;
-   top: -25px;
+   top: -40px;
   left: 50px;
   display: inline-block;
   width: 135px;
