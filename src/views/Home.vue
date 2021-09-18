@@ -113,10 +113,11 @@ export default {
       //监听音乐播放结束
     async nextMusic(){
       console.log(this.$store.state.nextId);
-         this.$store.commit('NEXT_ID',this.$store.state.nextId)
+         
        const {data:res}=await this.$http.get(`/song/url?id=${this.$store.state.nextId}`)
         this.nextUrl=res.data[0].url
         this.$refs.audioMusicRef.src=this.nextUrl
+        this.$store.commit('NEXT_ID',this.$store.state.nextId)
       },
       showUserInfo(){
         //编程式导航

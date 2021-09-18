@@ -38,7 +38,6 @@ export default new Vuex.Store({
         NEXT_ID(state, playload) {
             for (let i = 0; i < state.musicListID.length; i++) {
                 if (state.musicListID[i] == playload) {
-
                     state.nextId = state.musicListID[i + 1]
                 }
             }

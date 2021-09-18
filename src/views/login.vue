@@ -190,8 +190,14 @@ export default {
           //获取登录状态
            const {data:login}= await this.$http.get(`/login/status`)
          if(login.data.code==200){
+           console.log(res);
+            this.token=res.token
             //将登录成功的token保存到客户端的sessionStorage中
-       window.sessionStorage.setItem("token",this.token);
+        window.sessionStorage.setItem("token",this.token);
+          this.loginUser=login.data.profile
+         //将获取到的信息传入vuex中
+        //  console.log(this.loginUser);
+        this.$store.commit('INIT_userInfo',this.loginUser)
         this.$message.success('登录成功,欢迎享受音乐')
         this.loginUser=login.data.profile
          //通过编程式导航到首页
