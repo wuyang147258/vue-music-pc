@@ -7,6 +7,12 @@ body,
     min-width: 1366px;
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 .el-breadcrumb__inner {
     font-size: 14px!important;
 }

@@ -12,7 +12,7 @@
             :src="songListDetailInfo.coverImgUrl"
             :fit="fits.cover"></el-image>
          </div>
-        
+        <el-button class="back" type="danger" round @click="back">back</el-button>
       </div>
       <div class="info-right">
  
@@ -30,15 +30,47 @@
       </div>
     </div>
     <div class="clear"></div>
-    <div class="songListItem"><song :songListInfo="songListDetail"></song></div>
+    <div class="songListItem">
+   <!-- <div v-for="(item,index) in songListInfo" :key="index">{{item.name}}</div> -->
+    <!-- 表单区域 -->
+  <el-table
+    :data="songListDetail"
+    stripe
+    @row-click="playMusicLine"
+    >
+    <el-table-column
+      label="#"
+      type="index"
+      width="180">
+    </el-table-column>
+    <el-table-column
+      label="音乐名称"
+      prop="name"
+      width="550">
+    </el-table-column>
+      <el-table-column
+      label="作者"
+      prop="al.name"
+      width="250">
+    </el-table-column>
+     <el-table-column
+      label="播放"
+      width="180">
+    <template slot-scope="scope">
+      <div class="palyMusic" @click="playMusic(scope.row.id)"><i class="el-icon-video-play"></i>&nbsp;&nbsp;<span>播放</span></div>
+    </template>
+    </el-table-column>
+  </el-table>
+    </div>
   </div>
 </template>
 
 <script>
 //引入组件
-import Song from '../song-list/song.vue'
+
 export default {
-  props:{
+    //传输过来的id
+   props:{
     "id":String
   },
   created(){
@@ -53,9 +85,15 @@ export default {
         query:this.id
       },
       //存储歌单的信息
+    
       songListDetailInfo:[],
       //存储获取到的歌曲
-      songListDetail:[]
+      songListDetail:[],
+        //正在播放音乐的url
+     musicUrl:'',
+     //控制是否播放音乐
+     isPlay:'',
+     allid:[]
     }
   },
   methods:{
@@ -68,15 +106,45 @@ export default {
            this.songListDetail=res.playlist.tracks
            this.songListDetailInfo=res.playlist
         
-         }
-         
-         
-    }
+         }  
+    },
+    //下半部歌曲区域
+      async playMusic(id){
+      // this.allid= 
+      this.songListDetail.forEach((item,index)=>{
+        this.allid.push(item.id)
+      })
+      this.$store.commit('INIT_nowMusicId',id)
+      //传入歌单所有音乐id
+       this.$store.commit('INIT_musicListID',this.allid)
+      //传入歌单当前播放音乐的id
+      this.$store.commit('NEXT_ID',id)
+     
+      const {data:res}=  await this.$http.get(`/check/music?id=${id}`)
+     
+      if(res.message!=='ok'){
+        this.$message.error('音乐无版权')
+      }else{
+       const {data:res}=await this.$http.get(`/song/url?id=${id}`)
+       this.musicUrl =res.data[0].url
+       this.isPlay=true    
+       this.$store.commit('INIT_MUSICURL',this.musicUrl)
+       this.$store.commit('INIt_ISPLAY',this.isPlay)
+      //  audio.src= this.musicUrl
+      //  audio.play();
+      }
+   },
+   playMusicLine(row){
+     
+      this.playMusic(row.id)
+   },
+   back(){
+     //跳转回上一级
+     //编程式导航
+       this.$router.go(-1)
+   }
   },
-  //注册组件
-  components:{
-    Song
-  }
+  
 }
 </script>
 
@@ -104,7 +172,7 @@ export default {
 .info-right{
   width: 300px;
   float:right;
-  margin-right: 690px;
+  margin-right: 700px;
   margin-top: -20px;
 }
 .oneLine h2{
@@ -137,5 +205,17 @@ export default {
 	 -webkit-line-clamp: 3;/*想省略几行就写几*/
 	 -webkit-box-orient: vertical;
 
+}
+.cell  {
+  margin-left: 20px!important;
+}
+.palyMusic{
+  cursor: pointer;
+}
+
+.back{
+  float: left;
+ margin-top: -220px;
+ margin-left: 1150px;
 }
 </style>

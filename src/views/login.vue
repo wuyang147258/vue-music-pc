@@ -74,8 +74,7 @@ export default {
         password:''
       },
       isShow:false,
-      //存储获取到的用户信息
-      loginUser:{},
+      
       //存储登录token
       token:''
     }
@@ -115,8 +114,6 @@ export default {
     },
     //失去焦点的时候验证验证码
      async blurCaptcha(){
-      
-     
        const {data:res}=await this.$http.get(`/captcha/verify?phone=${this.registerInfo.phone}&captcha=${this.registerInfo.captcha}`)
      
        if(res.data.status==='503'){
@@ -166,20 +163,14 @@ export default {
       }else{
         //  账号密码输入成功,获取登录状态
         console.log(res.token);
-      const {data:login}= await this.$http.get(`/login/status`)
-      if(login.data.code==200){
-       
         this.token=res.token
           //将登录成功的token保存到客户端的sessionStorage中
        window.sessionStorage.setItem("token",this.token);
-         this.loginUser=login.data.profile
-         //将获取到的信息传入vuex中
-        //  console.log(this.loginUser);
-        this.$store.commit('INIT_userInfo',this.loginUser)
+       
         this.$message.success('登录成功,欢迎享受音乐')
          //通过编程式导航到首页
          this.$router.push('/home').catch(err => err)
-      }
+      // }
       }
       }else{
         //使用验证码登录
@@ -187,22 +178,16 @@ export default {
         if(res.loginType!==1){
           this.$message.error('账号或者验证码输入错误')
         }else{
-          //获取登录状态
-           const {data:login}= await this.$http.get(`/login/status`)
-         if(login.data.code==200){
+        
            console.log(res);
             this.token=res.token
             //将登录成功的token保存到客户端的sessionStorage中
         window.sessionStorage.setItem("token",this.token);
-          this.loginUser=login.data.profile
-         //将获取到的信息传入vuex中
-        //  console.log(this.loginUser);
-        this.$store.commit('INIT_userInfo',this.loginUser)
         this.$message.success('登录成功,欢迎享受音乐')
-        this.loginUser=login.data.profile
+      
          //通过编程式导航到首页
          this.$router.push('/home').catch(err => err)
-      }
+      // }
         }
       }
      }

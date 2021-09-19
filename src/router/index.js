@@ -5,6 +5,7 @@ import Home from '../views/Home.vue'
 import Song_list from '../components/song-list/song-list.vue'
 import Song_list_Detail from '../components/song-list/song-list-detail.vue'
 import userInfo from '../components/userInfo/userInfo.vue'
+import Mysong_list_detail from '../components/songlist.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -29,7 +30,11 @@ const routes = [{
         path: '/userInfo/',
         component: userInfo
 
-    }]
+    }, {
+        path: '/Mysong_list_detail/:id',
+        component: Mysong_list_detail,
+        props: true
+    }, ]
 }]
 
 const router = new VueRouter({

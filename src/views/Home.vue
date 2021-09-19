@@ -67,7 +67,7 @@ export default {
     created(){
       //在创建的时候获取歌单分类
       this.getClassifyMusic()
-
+      this.getLoginState()
       
     },
     data(){
@@ -75,7 +75,9 @@ export default {
         //存储歌单分类数据
         classifyMusic:[],
         //下一首播放音乐的url
-        nextUrl:''
+        nextUrl:'',
+       //存储获取到的用户信息
+      loginUser:{},
       
       }
     },
@@ -122,6 +124,16 @@ export default {
       showUserInfo(){
         //编程式导航
          this.$router.push(`/userInfo/`).catch(err => err)
+      },
+      async getLoginState(){
+         const {data:login}= await this.$http.get(`/login/status`)
+         if(login.data.code==200){
+         this.loginUser=login.data.profile
+         //将获取到的信息传入vuex中
+        console.log(this.loginUser);
+        this.$store.commit('INIT_userInfo',this.loginUser)
+        this.$store.commit('INIT_userID',this.loginUser.userId)
+         }
       }
     }
 }

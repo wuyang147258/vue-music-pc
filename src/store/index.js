@@ -16,12 +16,17 @@ export default new Vuex.Store({
         //下一首播放音乐的id
         nextId: '',
         //用户的信息
-        userInfo: {}
+        userInfo: {},
+        //用户的id
+        userID: ''
     },
     mutations: {
         //存入现在的url
         INIT_MUSICURL(state, playLoad) {
             state.musicUrl = playLoad
+        },
+        INIT_userID(state, playLoad) {
+            state.userID = playLoad
         },
         INIt_ISPLAY(state, isPlay) {
             state.isPlay = isPlay
@@ -35,6 +40,7 @@ export default new Vuex.Store({
         INIT_userInfo(state, payload) {
             state.userInfo = payload
         },
+
         NEXT_ID(state, playload) {
             for (let i = 0; i < state.musicListID.length; i++) {
                 if (state.musicListID[i] == playload) {
