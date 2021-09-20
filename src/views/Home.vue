@@ -49,7 +49,9 @@
       <div class="userImg" @click="showUserInfo">
          <el-avatar :src="this.$store.state.userInfo.avatarUrl"  ></el-avatar>
       </div>
+    
     <div class="imgLogo"><img src='../assets/logo.png'></div>
+     <div class="search"> <Search></Search></div>
     <div class="exitLogin"><el-button type="danger" round @click="exitLogin">退出登录</el-button></div>
     </el-header>
     <el-main><router-view :key="$route.fullPath"></router-view></el-main>
@@ -61,7 +63,7 @@
 </template>
 
 <script>
-
+import Search from '../components/search/search.vue'
 export default {
    
     created(){
@@ -91,7 +93,7 @@ export default {
         this.$message.error('获取歌单分类错误')
       }else{
         this.classifyMusic=res.tags
-        // console.log(this.classifyMusic);
+     
       }
       },
       //退出登录
@@ -114,7 +116,7 @@ export default {
       },
       //监听音乐播放结束
     async nextMusic(){
-      console.log(this.$store.state.nextId);
+   
          
        const {data:res}=await this.$http.get(`/song/url?id=${this.$store.state.nextId}`)
         this.nextUrl=res.data[0].url
@@ -130,12 +132,16 @@ export default {
          if(login.data.code==200){
          this.loginUser=login.data.profile
          //将获取到的信息传入vuex中
-        console.log(this.loginUser);
+      
         this.$store.commit('INIT_userInfo',this.loginUser)
         this.$store.commit('INIT_userID',this.loginUser.userId)
          }
       }
+    },
+    components:{
+      Search
     }
+    
 }
 </script>
 
@@ -207,5 +213,11 @@ export default {
   margin-right: 100px;
  line-height: 60px;
 }
-
+.search{
+  float: left;
+  margin-left: 100px;
+  position: absolute;
+  z-index:5555;
+ 
+}
 </style>

@@ -65,7 +65,7 @@ export default {
        this.$store.commit('INIT_musicListID',this.allid)
       //传入歌单当前播放音乐的id
       this.$store.commit('NEXT_ID',id)
-      console.log(id);
+  
       const {data:res}=  await this.$http.get(`/check/music?id=${id}`)
       if(res.message!=='ok'){
         this.$message.error('音乐无版权')

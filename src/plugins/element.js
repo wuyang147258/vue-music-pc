@@ -19,12 +19,16 @@ import {
     BreadcrumbItem,
     Table,
     TableColumn,
-    Avatar
+    Avatar,
+    Input,
+    Tag
 
 
 } from 'element-ui'
 
 Vue.use(Button)
+Vue.use(Tag)
+Vue.use(Input)
 Vue.use(Avatar)
 Vue.use(Breadcrumb)
 Vue.use(Table)

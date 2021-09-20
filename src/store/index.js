@@ -18,12 +18,17 @@ export default new Vuex.Store({
         //用户的信息
         userInfo: {},
         //用户的id
-        userID: ''
+        userID: '',
+        //关键词音乐数据
+        keywordMusic: []
     },
     mutations: {
         //存入现在的url
         INIT_MUSICURL(state, playLoad) {
             state.musicUrl = playLoad
+        },
+        INIT_keywordMusic(state, playLoad) {
+            state.keywordMusic = playLoad
         },
         INIT_userID(state, playLoad) {
             state.userID = playLoad

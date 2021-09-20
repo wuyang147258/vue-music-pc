@@ -64,7 +64,7 @@ export default {
         if(this.queryInfo.query==="另类"){
           this.queryInfo.query="另类/独立"
         }
-        console.log(this.queryInfo.query);
+      
         // this.queryInfo.limit=this.queryInfo.pagenum*10
         this.queryInfo.offset=(this.queryInfo.pagenum - 1) * 50
        

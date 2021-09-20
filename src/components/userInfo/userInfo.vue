@@ -50,19 +50,19 @@ export default {
     methods:{
      async getMyMusicList(){
       const {data:res} = await this.$http.get(`/user/playlist?uid=${this.$store.state.userID}`)
-      console.log(res.playlist);
+    
       if(res.code!==200){
          this.$nextTick(()=>{
            this.getMyMusicList()
        })
       }else{
         this.userMusicList=res.playlist
-        console.log(this.userMusicList.id);
+      
       }
      },
      //跳转我喜欢歌单详情页
      showMusicList(id){
-       console.log(id);
+      
        this.$router.push(`/Mysong_list_detail/${id}`).catch(err => err)
      }
     }

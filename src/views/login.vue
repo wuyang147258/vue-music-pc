@@ -92,7 +92,7 @@ export default {
    async sendCapycha(phone){
     //  console.log(this.registerInfo.phone);
      const {data:res} =await this.$http.get(`/captcha/sent?phone=${phone}`)
-     console.log(res.code);
+   
      if(res.code==200) {
        this.$message.success('发送验证码成功')
        }
@@ -105,7 +105,7 @@ export default {
      }else{
       console.log(this.registerInfo.phone);
        const {data:res}= await this.$http.get(`/cellphone/existence/check?phone=${this.registerInfo.phone}`)
-       console.log(res.nickname);
+    
        if(res.nickname!==''){
          this.$message.error('此手机号已经注册请直接登录')
        }
