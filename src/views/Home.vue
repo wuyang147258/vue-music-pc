@@ -20,7 +20,7 @@
       </el-submenu>
       <el-submenu index="2">
         <template slot="title">
-          <div>歌手</div>
+          <div  @click="opensinger">歌手</div>
         </template>
       </el-submenu>
        <el-submenu index="3">
@@ -55,7 +55,7 @@
     <div class="exitLogin"><el-button type="danger" round @click="exitLogin">退出登录</el-button></div>
     </el-header>
     <el-main><router-view :key="$route.fullPath"></router-view></el-main>
-    <el-footer><audio @ended="nextMusic" :src="this.$store.state.musicUrl" autoplay volume controls class="audioMusic" ref="audioMusicRef"></audio></el-footer>
+    <el-footer><span class="musicName">{{nowMusicName}}</span><audio @play="onPlay" @ended="nextMusic" :src="this.$store.state.musicUrl" autoplay volume controls class="audioMusic" ref="audioMusicRef"></audio></el-footer>
   </el-container>
 </el-container>
 
@@ -70,7 +70,7 @@ export default {
       //在创建的时候获取歌单分类
       this.getClassifyMusic()
       this.getLoginState()
-      
+     
     },
     data(){
       return{
@@ -80,7 +80,7 @@ export default {
         nextUrl:'',
        //存储获取到的用户信息
       loginUser:{},
-      
+      nowMusicName:''
       }
     },
     
@@ -116,12 +116,15 @@ export default {
       },
       //监听音乐播放结束
     async nextMusic(){
-   
-         
-       const {data:res}=await this.$http.get(`/song/url?id=${this.$store.state.nextId}`)
+        const {data:res}=await this.$http.get(`/song/url?id=${this.$store.state.nextId}`)
         this.nextUrl=res.data[0].url
         this.$refs.audioMusicRef.src=this.nextUrl
+        console.log(this.$store.state.nextId);
+        this.$store.commit('INIT_nowMusicId',false)
+        const {data:name}=await this.$http.get(`/song/detail?ids=${this.$store.state.nextId}`)
+        this.nowMusicName=name.songs[0].name
         this.$store.commit('NEXT_ID',this.$store.state.nextId)
+        
       },
       showUserInfo(){
         //编程式导航
@@ -132,11 +135,22 @@ export default {
          if(login.data.code==200){
          this.loginUser=login.data.profile
          //将获取到的信息传入vuex中
-      
         this.$store.commit('INIT_userInfo',this.loginUser)
         this.$store.commit('INIT_userID',this.loginUser.userId)
          }
-      }
+      },
+      async onPlay(){
+        if(this.$refs.audioMusicRef.currentTime=='0'&&this.$store.state.nowMusicId!==false){
+         const {data:res}=await this.$http.get(`/song/detail?ids=${this.$store.state.nowMusicId}`)
+        this.nowMusicName=res.songs[0].name
+        console.log(res.songs[0].name);
+        }
+      
+      },
+      opensinger(){
+         this.$router.push(`/singer/`).catch(err => err)
+      },
+     
     },
     components:{
       Search
@@ -202,7 +216,7 @@ export default {
   line-height: 60px;
 }
 .audioMusic{
-  margin-top: 20px;
+  margin-top: 6px;
   width: 1500px;
   
 }

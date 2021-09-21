@@ -7,6 +7,7 @@ import Song_list_Detail from '../components/song-list/song-list-detail.vue'
 import userInfo from '../components/userInfo/userInfo.vue'
 import Mysong_list_detail from '../components/songlist.vue'
 import SearchItem from '../components/search/searchItem.vue'
+import Singer from '../components/singer/singer.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -20,26 +21,31 @@ const routes = [{
     component: Home,
     redirect: '/song_list/华语',
     children: [{
-        path: '/song_list/:name',
-        component: Song_list,
-        props: true
-    }, {
-        path: '/song_list_detail/:id',
-        component: Song_list_Detail,
-        props: true
-    }, {
-        path: '/userInfo/',
-        component: userInfo
+            path: '/song_list/:name',
+            component: Song_list,
+            props: true
+        }, {
+            path: '/song_list_detail/:id',
+            component: Song_list_Detail,
+            props: true
+        }, {
+            path: '/userInfo/',
+            component: userInfo
 
-    }, {
-        path: '/Mysong_list_detail/:id',
-        component: Mysong_list_detail,
-        props: true
-    }, {
-        path: '/searchMusic/',
-        component: SearchItem,
-        props: true
-    }]
+        }, {
+            path: '/Mysong_list_detail/:id',
+            component: Mysong_list_detail,
+            props: true
+        }, {
+            path: '/searchMusic/',
+            component: SearchItem,
+            props: true
+        },
+        {
+            path: '/singer/',
+            component: Singer,
+        }
+    ]
 }]
 
 const router = new VueRouter({
