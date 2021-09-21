@@ -6,6 +6,7 @@
     placeholder="请输入搜索内容"
     clearable
     @focus="showitem" 
+  
     >
      <i slot="suffix" class="el-input__icon el-icon-search" @click="search"></i>
     </el-input>
