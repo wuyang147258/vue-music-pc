@@ -20,7 +20,8 @@ export default new Vuex.Store({
         //用户的id
         userID: '',
         //关键词音乐数据
-        keywordMusic: []
+        keywordMusic: [],
+
     },
     mutations: {
         //存入现在的url
@@ -42,6 +43,7 @@ export default new Vuex.Store({
         INIT_nowMusicId(state, payload) {
             state.nowMusicId = payload
         },
+
         INIT_userInfo(state, payload) {
             state.userInfo = payload
         },

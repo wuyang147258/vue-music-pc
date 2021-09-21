@@ -8,6 +8,8 @@ import userInfo from '../components/userInfo/userInfo.vue'
 import Mysong_list_detail from '../components/songlist.vue'
 import SearchItem from '../components/search/searchItem.vue'
 import Singer from '../components/singer/singer.vue'
+import Mv from '../components/mv/mv.vue'
+import MvPlay from '../components/mv/mvPlay.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -44,6 +46,15 @@ const routes = [{
         {
             path: '/singer/',
             component: Singer,
+        },
+        {
+            path: '/mv/',
+            component: Mv,
+        },
+        {
+            path: '/mvPlay/:id',
+            component: MvPlay,
+            props: true
         }
     ]
 }]

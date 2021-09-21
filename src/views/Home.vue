@@ -30,7 +30,7 @@
       </el-submenu>
        <el-submenu index="4">
         <template slot="title">
-          <div>MV</div>
+          <div @click="openMv">MV</div>
         </template>
       </el-submenu>
        <el-submenu index="5">
@@ -65,7 +65,7 @@
 <script>
 import Search from '../components/search/search.vue'
 export default {
-   
+  
     created(){
       //在创建的时候获取歌单分类
       this.getClassifyMusic()
@@ -80,7 +80,8 @@ export default {
         nextUrl:'',
        //存储获取到的用户信息
       loginUser:{},
-      nowMusicName:''
+      nowMusicName:'',
+      
       }
     },
     
@@ -141,16 +142,20 @@ export default {
       },
       async onPlay(){
         if(this.$refs.audioMusicRef.currentTime=='0'&&this.$store.state.nowMusicId!==false){
-         const {data:res}=await this.$http.get(`/song/detail?ids=${this.$store.state.nowMusicId}`)
-        this.nowMusicName=res.songs[0].name
-        console.log(res.songs[0].name);
+       
+           const {data:res}=await this.$http.get(`/song/detail?ids=${this.$store.state.nowMusicId}`)
+           this.nowMusicName=res.songs[0].name
+     
+        
         }
       
       },
       opensinger(){
          this.$router.push(`/singer/`).catch(err => err)
       },
-     
+      openMv(){
+       this.$router.push('/mv/').catch(err=>err)
+     }
     },
     components:{
       Search
@@ -232,6 +237,5 @@ export default {
   margin-left: 100px;
   position: absolute;
   z-index:5555;
- 
 }
 </style>
