@@ -35,7 +35,7 @@
       </el-submenu>
        <el-submenu index="5">
         <template slot="title">
-          <div>私人Fm</div>
+          <div @click="openFm">私人Fm</div>
         </template>
       </el-submenu>
     </el-menu>
@@ -55,7 +55,7 @@
     <div class="exitLogin"><el-button type="danger" round @click="exitLogin">退出登录</el-button></div>
     </el-header>
     <el-main><router-view :key="$route.fullPath"></router-view></el-main>
-    <el-footer><span class="musicName">{{nowMusicName}}</span><audio @play="onPlay" @ended="nextMusic" :src="this.$store.state.musicUrl" autoplay volume controls class="audioMusic" ref="audioMusicRef"></audio></el-footer>
+    <el-footer><div class="sanjiao" @click="openDetails"></div><span class="musicName">{{nowMusicName}}</span><audio @timeupdate="getCurrentTime" @play="onPlay" @pause="onPause" @ended="nextMusic" :src="this.$store.state.musicUrl" autoplay volume controls class="audioMusic" ref="audioMusicRef"></audio></el-footer>
   </el-container>
 </el-container>
 
@@ -65,12 +65,35 @@
 <script>
 import Search from '../components/search/search.vue'
 export default {
-  
+    watch:{
+      "$store.state.clickLeft":{
+          handler(newVal){
+            
+            if(newVal==true){
+             
+              this.toLeft()
+            }
+          },
+           deep:true,
+      immediate:true
+      },
+       "$store.state.clickRight":{
+          handler(newVal){
+            
+            if(newVal==true){
+             
+              this.toRight()
+            }
+          },
+           deep:true,
+      immediate:true
+      },
+    },
     created(){
       //在创建的时候获取歌单分类
       this.getClassifyMusic()
       this.getLoginState()
-     
+       
     },
     data(){
       return{
@@ -81,20 +104,21 @@ export default {
        //存储获取到的用户信息
       loginUser:{},
       nowMusicName:'',
-      
+      currentTime:'',
+      //向左切换
+      toLeftUrl:'',
+      //向右切换
+      toRightUrl:''
       }
     },
-    
     methods:{
       //获取歌单分类的方法
      async getClassifyMusic(){
-      const {data:res} =await this.$http.get('/playlist/hot')
-     
+      const {data:res} =await this.$http.get('/playlist/hot') 
       if(res.code!==200){
         this.$message.error('获取歌单分类错误')
       }else{
-        this.classifyMusic=res.tags
-     
+        this.classifyMusic=res.tags  
       }
       },
       //退出登录
@@ -120,12 +144,11 @@ export default {
         const {data:res}=await this.$http.get(`/song/url?id=${this.$store.state.nextId}`)
         this.nextUrl=res.data[0].url
         this.$refs.audioMusicRef.src=this.nextUrl
-        console.log(this.$store.state.nextId);
         this.$store.commit('INIT_nowMusicId',false)
         const {data:name}=await this.$http.get(`/song/detail?ids=${this.$store.state.nextId}`)
         this.nowMusicName=name.songs[0].name
         this.$store.commit('NEXT_ID',this.$store.state.nextId)
-        
+        this.$store.commit('INIt_ENDMUSIC',true)
       },
       showUserInfo(){
         //编程式导航
@@ -141,13 +164,42 @@ export default {
          }
       },
       async onPlay(){
-        if(this.$refs.audioMusicRef.currentTime=='0'&&this.$store.state.nowMusicId!==false){
-       
-           const {data:res}=await this.$http.get(`/song/detail?ids=${this.$store.state.nowMusicId}`)
-           this.nowMusicName=res.songs[0].name
-     
-        
+        setInterval(()=>{
+           this.$store.commit('INIt_ENDMUSIC',false)
+        },3000)
+        this.$store.commit('INIt_ISPLAY',true)
+      
+        if( this.$store.state.isPlay==true){
         }
+        if(this.$refs.audioMusicRef.currentTime=='0'&&this.$store.state.nowMusicId!==false){
+           const {data:res}=await this.$http.get(`/song/detail?ids=${this.$store.state.nowMusicId}`)
+             this.$store.commit('INIt_ENDMUSIC',false)
+             this.nowMusicName=res.songs[0].name
+        }
+      },
+      onPause(){
+          this.$store.commit('INIt_ISPLAY',false)
+           if( this.$store.state.isPlay==true){
+        }
+      },
+     async toLeft(){
+       
+        const {data:res}=await this.$http.get(`/song/url?id=${this.$store.state.nowMusicId}`)
+        this.toLeftUrl=res.data[0].url
+        this.$refs.audioMusicRef.src=this.toLeftUrl
+        this.$store.commit('INIt_CLICKLEFT',false)
+      },
+      async toRight(){
+       
+        const {data:res}=await this.$http.get(`/song/url?id=${this.$store.state.nowMusicId}`)
+        this.toRightUrl=res.data[0].url
+        this.$refs.audioMusicRef.src=this.toRightUrl
+        this.$store.commit('INIT_CLICKRIGHT',false)
+      },
+      getCurrentTime(){
+       this.currentTime=this.$refs.audioMusicRef.currentTime
+      //将播放进度传入vuex
+       this.$store.commit('INIT_CURRENTTIME',this.currentTime)
       
       },
       opensinger(){
@@ -155,7 +207,17 @@ export default {
       },
       openMv(){
        this.$router.push('/mv/').catch(err=>err)
-     }
+     },
+      openFm(){
+       this.$router.push('/privateFm/').catch(err=>err)
+     },
+     openDetails(){
+       if(this.$store.state.nowMusicId!==''||this.$store.state.nextId!==''){
+        this.$router.push('/musicDetail/').catch(err=>err)
+       }
+     
+     },
+
     },
     components:{
       Search
@@ -237,5 +299,15 @@ export default {
   margin-left: 100px;
   position: absolute;
   z-index:5555;
+}
+.el-footer{
+  background-color: black;
+}
+.sanjiao{
+ margin-top: -20px;
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  border-bottom-color: black;
 }
 </style>

@@ -10,6 +10,8 @@ import SearchItem from '../components/search/searchItem.vue'
 import Singer from '../components/singer/singer.vue'
 import Mv from '../components/mv/mv.vue'
 import MvPlay from '../components/mv/mvPlay.vue'
+import PrivateFm from '../components/privateFm/privateFm.vue'
+import MusicDetail from '../components/musicDetails/detail.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -55,6 +57,16 @@ const routes = [{
             path: '/mvPlay/:id',
             component: MvPlay,
             props: true
+        },
+        {
+            path: '/privateFm/',
+            component: PrivateFm,
+
+        },
+        {
+            path: '/musicDetail/',
+            component: MusicDetail,
+
         }
     ]
 }]
