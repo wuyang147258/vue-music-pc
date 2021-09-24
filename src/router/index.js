@@ -14,6 +14,7 @@ import MusicDetail from '../components/musicDetails/detail.vue'
 import StartInterface from '../components/startInterface/startInterface.vue'
 import SongListZhuan from '../components/song-list/songListZhuan.vue'
 import vedio from '../components/video/vedio.vue'
+import vedioFace from '../components/video/vedioface.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -80,7 +81,11 @@ const routes = [{
             component: vedio,
             props: true
         },
+        {
+            path: '/vedioface/',
+            component: vedioFace,
 
+        },
     ]
 }]
 

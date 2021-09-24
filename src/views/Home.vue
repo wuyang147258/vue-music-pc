@@ -12,7 +12,7 @@
      <!-- 一级菜单 -->
       <el-submenu index="5">
         <template slot="title">
-          <div @click="openStartInterFace">主菜单</div>
+          <div @click="openStartInterFace">home</div>
         </template>
       </el-submenu>
       <el-submenu index="1">
@@ -37,7 +37,11 @@
           <div @click="openMv">MV</div>
         </template>
       </el-submenu>
-      
+      <el-submenu index="4">
+        <template slot="title">
+          <div @click="openVedio">视频</div>
+        </template>
+      </el-submenu>
     </el-menu>
       </el-scrollbar>
       
@@ -217,6 +221,9 @@ export default {
        }
      
      },
+     openVedio(){
+       this.$router.push('/vedioFace/').catch(err=>err)
+     }
 
     },
     components:{
