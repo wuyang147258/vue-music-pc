@@ -1,17 +1,18 @@
 <template>
   <div id="mvPlay-container">
+
     <el-button class="back" type="danger" round @click="back">back</el-button>
    <div class="mv-item">
       <div class="video-play">
       <video id="video" autoplay="true" ref="mvRef" controls></video>
     </div>
     <div class="mv-sim">
-      <span><h2>相似的mv：</h2></span>
-      <div class="block" v-for="item in simMvList" :key="item.id" lazy @click="playTheMv(item.id)">
-       <span class="songListName"><strong>{{item.name}}</strong></span>
+      <span><h2>相似的视频：</h2></span>
+      <div class="block" v-for="item in simMvList" :key="item.vid" lazy @click="playTheMv(item.vid)">
+       <span class="songListName"><strong>{{item.title}}</strong></span>
       <el-image
       style="width: 230px; height: 200px"
-      :src="item.cover"
+      :src="item.coverUrl"
       :fit="fits.cover"></el-image>
       </div>
     </div>
@@ -42,10 +43,12 @@ export default {
         //存储到的mv评论信息
         commentList:[],
         //是否正在播放mv
-        isplayMv:false
+        isplayMv:false,
+       
       }
     },
     created(){
+      console.log(this.id);
       this.getTheMv()
       this.getSimMv()
       this.getComment()
@@ -53,20 +56,23 @@ export default {
    
     methods:{
      async getTheMv(){
-       const {data:res}=await this.$http.get(`/mv/url?id=${this.id}`)
-       this.$refs.mvRef.src=res.data.url
+       const {data:res}=await this.$http.get(`/video/url?id=${this.id}`)
+      //  this.vedioUrl=res.urls[0].url
+       this.$refs.mvRef.src=res.urls[0].url
        
       },
      async getSimMv(){
-        const {data:res}=await this.$http.get(`/simi/mv?mvid=${this.id}`)
-        this.simMvList=res.mvs
+        const {data:res}=await this.$http.get(`/related/allvideo?id=${this.id}`)
+       
+        this.simMvList=res.data
       },
        playTheMv(id){
-        this.$router.push(`/mvPlay/${id}`)
+        
+        this.$router.push(`/vedio/${id}`)
     },
      async getComment(){
-      const {data:res}=await this.$http.get(`/comment/mv?id=${this.id}&limit=50`)
-      console.log(res.comments);
+      const {data:res}=await this.$http.get(`/comment/video?id=${this.id}&limit=50`)
+  
       this.commentList=res.comments
       },
       back(){

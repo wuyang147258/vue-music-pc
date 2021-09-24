@@ -10,8 +10,10 @@ import SearchItem from '../components/search/searchItem.vue'
 import Singer from '../components/singer/singer.vue'
 import Mv from '../components/mv/mv.vue'
 import MvPlay from '../components/mv/mvPlay.vue'
-import PrivateFm from '../components/privateFm/privateFm.vue'
 import MusicDetail from '../components/musicDetails/detail.vue'
+import StartInterface from '../components/startInterface/startInterface.vue'
+import SongListZhuan from '../components/song-list/songListZhuan.vue'
+import vedio from '../components/video/vedio.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -23,7 +25,7 @@ const routes = [{
 }, {
     path: '/home',
     component: Home,
-    redirect: '/song_list/华语',
+    redirect: '/StartInterface/',
     children: [{
             path: '/song_list/:name',
             component: Song_list,
@@ -59,15 +61,26 @@ const routes = [{
             props: true
         },
         {
-            path: '/privateFm/',
-            component: PrivateFm,
+            path: '/StartInterface/',
+            component: StartInterface,
 
         },
         {
             path: '/musicDetail/',
             component: MusicDetail,
 
-        }
+        },
+        {
+            path: '/zhuanSongList/:id',
+            component: SongListZhuan,
+            props: true
+        },
+        {
+            path: '/vedio/:id',
+            component: vedio,
+            props: true
+        },
+
     ]
 }]
 

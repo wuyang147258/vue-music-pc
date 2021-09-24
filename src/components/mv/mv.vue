@@ -97,7 +97,7 @@ export default {
    async getSearchMv(){
      const {data:res}=await this.$http.get(`/search?keywords=${this.searchMv}&type=1004`)
      this.searchMvList=res.result.mvs
-     console.log(res.result.mvs);
+    
     }
   }
 }
@@ -124,7 +124,7 @@ export default {
 .songListName{
  
   position: absolute;
-   top: -40px;
+  top: -40px;
   left: 50px;
   display: inline-block;
   width: 135px;

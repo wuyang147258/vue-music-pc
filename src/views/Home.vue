@@ -10,7 +10,11 @@
      >
     <span class="asideHeader">网易云音乐</span>
      <!-- 一级菜单 -->
-     
+      <el-submenu index="5">
+        <template slot="title">
+          <div @click="openStartInterFace">主菜单</div>
+        </template>
+      </el-submenu>
       <el-submenu index="1">
         <template slot="title">
           <div>热门歌单</div>
@@ -33,11 +37,7 @@
           <div @click="openMv">MV</div>
         </template>
       </el-submenu>
-       <el-submenu index="5">
-        <template slot="title">
-          <div @click="openFm">私人Fm</div>
-        </template>
-      </el-submenu>
+      
     </el-menu>
       </el-scrollbar>
       
@@ -208,8 +208,8 @@ export default {
       openMv(){
        this.$router.push('/mv/').catch(err=>err)
      },
-      openFm(){
-       this.$router.push('/privateFm/').catch(err=>err)
+      openStartInterFace(){
+       this.$router.push('/StartInterface/').catch(err=>err)
      },
      openDetails(){
        if(this.$store.state.nowMusicId!==''||this.$store.state.nextId!==''){
