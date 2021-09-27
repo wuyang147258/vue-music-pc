@@ -65,6 +65,7 @@ export default {
     this.getrecommendMv()
     this.getFenLeiTah()
     this.getAllList()
+    
   },
   data(){
     return{
