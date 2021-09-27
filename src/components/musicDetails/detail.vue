@@ -10,6 +10,7 @@
             <i v-else class="play el-icon-video-play"></i>
             <i class="left el-icon-d-arrow-left" @click="toLeft"></i>
             <i class="right el-icon-d-arrow-right" @click="toRight"></i>
+            <i class="like el-icon-orange" :class="{activeLike:this.$store.state.isLike==true}" @click="likeSongs"></i>
         </div>
         <div class="item-right">
           <div class="nickname"><h3>{{songdetail.name}}</h3></div>
@@ -88,11 +89,17 @@ export default {
      songLyric:[],
      lyricIndex:'',
      //评论数据
-     commentList:[]
+     commentList:[],
+     //喜欢歌曲参数
+     likeBoolean:false,
+     //用户喜欢的歌曲列表
+     userLikeList:[]
     }
   },
   created(){
     this.getMusicDetailNext()
+    //获取用户喜欢列表
+    this.getUserList()
   
  
   },
@@ -208,8 +215,27 @@ export default {
                     
         }
       }
-        }    
-       
+        },
+     async likeSongs(){
+         this.likeBoolean=!this.likeBoolean
+        this.$store.commit('INIT_ISLIKE',this.likeBoolean)  
+        console.log(this.$store.state.isLike);
+        const {data:res}=await this.$http.get(`/like?id=${this.$store.state.nowMusicId}&like=${this.$store.state.isLike}`)
+        
+        
+      },   
+    async getUserList(){
+      const {data:res}=await this.$http.get(`/likelist?uid=${this.$store.state.userID}`)
+      this.userLikeList=res.ids
+     const result= this.userLikeList.some((arr)=>{
+        if(this.$store.state.nowMusicId==arr){
+          return true
+        }else{
+          return false
+        }
+      })
+      this.$store.state.isLike=result
+    }
   }
 }
 </script>
@@ -369,5 +395,16 @@ export default {
   font-size: 35px;
   color: white;
   z-index: 99;
+}
+.like{
+  position: absolute;
+  left: 500px;
+  top: 450px;
+  font-size: 35px;
+  color: white;
+  z-index: 99;
+}
+.activeLike{
+  color: red;
 }
 </style>

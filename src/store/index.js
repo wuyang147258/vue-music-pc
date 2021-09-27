@@ -27,10 +27,10 @@ export default new Vuex.Store({
         currentTime: '',
         //点击了左一首
         clickLeft: '',
-
         //点击了下一首歌曲
         clickRight: '',
-
+        //是否喜欢音乐
+        isLike: ''
 
     },
     mutations: {
@@ -38,7 +38,9 @@ export default new Vuex.Store({
         INIT_MUSICURL(state, playLoad) {
             state.musicUrl = playLoad
         },
-
+        INIT_ISLIKE(state, playLoad) {
+            state.isLike = playLoad
+        },
         INIT_CURRENTTIME(state, playLoad) {
             state.currentTime = playLoad
         },

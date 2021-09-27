@@ -27,11 +27,7 @@
           <div  @click="opensinger">歌手</div>
         </template>
       </el-submenu>
-       <el-submenu index="3">
-        <template slot="title">
-          <div>我的音乐</div>
-        </template>
-      </el-submenu>
+       
        <el-submenu index="4">
         <template slot="title">
           <div @click="openMv">MV</div>
@@ -268,7 +264,8 @@ export default {
   display: block;
   width: 100%;
   text-align: center;
-  font-size: 30px;
+  font-size: 28px;
+
 }
 .imgLogo{
   width: 60px;
